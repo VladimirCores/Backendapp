@@ -1,4 +1,4 @@
 Backendapp
 ==========
 
-Project for Back-end API develop
+Project for Back-End API development using Node.js and MongoDB or Redis.
