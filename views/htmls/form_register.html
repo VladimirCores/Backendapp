@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+#form {
+	width: 600px;
+	color: #000;
+	background: #FFC;
+	position:relative;
+	padding: 25px;
+	border: 2px solid #39F;
+}
+
+#form label {
+	position:relative;
+	width:150px;
+	padding: 10px 20px;
+	font-weight: bold;
+	font-family: Verdana, Helvatica, Geneva, sans-serif;
+}
+
+#form input {
+	position:absolute;
+	width:300px;
+	right : 40px;
+}
+
+#form #submit {
+	position:relative;
+	right : 0;
+	width: 100%;
+	margin-top: 20px;
+	padding: 10px 25px;
+}
+</style>
+</head>
+
+<body>
+<form id="form" name="form" method="post" action="./db/locations">
+  <p>
+  	<label>First Name</label>
+  	<input name="firstname" id="in_txt" type="text" width="300px" maxlength="30" />
+  </p>
+  <p>
+ 	 <label>Last Name</label>
+  	 <input name="last_name" id="in_txt" type="text" width="300px" maxlength="50" />
+  </p>
+  <p>
+  	<label>City</label>
+    <input name="city" id="in_txt" type="text" width="200px" maxlength="30"/>
+  </p>
+  <p>
+  	<label>Country</label>
+    <input name="country" id="in_txt" type="text" width="200px" maxlength="30"/>
+  </p>
+  <input name="submit" id="submit" type="button" value="Submit"/>
+</form>
+</body>
+</html>
