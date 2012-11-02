@@ -1,0 +1,89 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.button{
+	text-align: center;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 10px 20px;
+	text-align: center;
+	width: 150px;
+}
+
+#container {
+	margin-top: 10px;
+	background-color: #fc0;
+	content: "REQUEST";
+}
+
+#container1 {
+	margin-top: 10px;
+	background-color: #fc0;
+	content: "LOOK";
+}
+
+#form {
+	width: 600px;
+	color: #000;
+	background: #FFC;
+	position:relative;
+	padding: 25px;
+	border: 2px solid #39F;
+}
+
+#form label {
+	position:relative;
+	width:150px;
+	padding: 10px 20px;
+	font-weight: bold;
+	font-family: Verdana, Helvatica, Geneva, sans-serif;
+}
+
+#form input {
+	position:absolute;
+	width:300px;
+	right : 40px;
+}
+
+#form #submit {
+	position:relative;
+	right : 0;
+	width: 100%;
+	margin-top: 20px;
+	padding: 10px 25px;
+}
+
+#tableresult {
+	width: 840;
+	margin: 20px auto;
+}
+
+#tableresult table {
+	border: 0;
+	background-color: #def;
+	text-align: center;
+}
+
+a {
+	font-weight: bold;
+	margin: 5px 10px;
+	cursor: pointer;
+}
+
+a:hover{
+	color: #0c2;
+}
+
+a:active{
+	color: #FC0;
+}
+
+#next, #prev {
+	opacity: 0;
+}

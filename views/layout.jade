@@ -1,0 +1,159 @@
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='/javascripts/jquery.min.js')
+    script
+      $(document).ready(function()
+      {
+        var STEP = 5;
+        var MAX = 0;
+
+        var show = true;
+        var currentIndex = 0;
+        var showNext = false;
+        var showPrev = false;
+
+        checkIndex();
+        getData("maxcount");
+
+        $("#next").click(function(){ currentIndex += STEP; getData("index"); checkIndex(); });
+        $("#prev").click(function(){ currentIndex -= STEP; getData("index"); checkIndex(); });
+        
+        $("#container").click(function() 
+        {
+          var form      = $("#form");
+          var name      = form.find("#name").attr("value");
+          var lastname  = form.find("#lastname").attr("value");
+          var email     = form.find("#email").attr("value");
+          var city      = form.find("#city").attr("value");
+          var country   = form.find("#country").attr("value");
+          
+          $.ajax(
+          {
+            type:"POST",
+            url:"./db/locations",
+            async:false,
+            data:{lastname:lastname,name:name,email:email,city:city,country:country},
+            datatype:"json",
+            success:function(data) {
+              MAX++;
+              //console.log("RESPONSE: %d and this is data \n %s", (currentIndex >= MAX-STEP), data);
+              //console.log("C|MAX = %d|%s",currentIndex,MAX);
+              if(currentIndex >= MAX-STEP)
+              {
+                  var row = "<tr>";
+                      row +=   "<td>" + data.name + "</td>" ; 
+                      row +=   "<td>" + data.lastname + "</td>" ; 
+                      row +=   "<td>" + (data.email || "NONE") + "</td>" ;
+                      row +=   "<td>" + data.country + "</td>" ;
+                      row +=   "<td>" + data.city + "</td>" ;
+                      row +=   "<td>" + (data.time || 0) + "</td>" ;
+                      row +=   "<td>" + (data.ip || 0) + "</td>" ;
+                  row += "</tr>";
+                  $("#tableresult table").append(row);
+              }
+              else
+              {
+                  checkIndex();
+              }
+              $("p:first").text("SUBMITTED");
+              form.find(":input").each(function(index, element){
+                $(element).attr("value", "");
+              })
+            }
+          });
+        });
+
+        $("#container1").click(function() 
+        {
+          if(show){
+            getData("index");
+            checkIndex();
+            show = false;
+            $("#container1").text("Hide");
+          } 
+          else
+          {
+            $("table").remove();
+            $("#next").css("opacity", currentIndex);
+            $("#prev").css("opacity", currentIndex);
+            showNext = showPrev = false;
+            show = true;
+            $("#container1").text("View");
+            $("#next").css("opacity", 0); 
+            $("#prev").css("opacity", 0); 
+          }
+        });
+
+        function checkIndex()
+        {
+          //console.log('currentIndex = ' + currentIndex);
+          if(currentIndex >= 0 && currentIndex < MAX - STEP) {
+            if(!showNext)
+            {
+              showNext = true;
+              $("#next").css("opacity", 1); 
+            }
+          }
+          else
+          {
+            $("#next").css("opacity", 0); 
+            showNext = false;
+          }
+          
+          if(currentIndex >= STEP && currentIndex != 0){
+            if(!showPrev)
+            {
+              $("#prev").css("opacity", 1); 
+              showPrev = true;
+            }
+          } 
+          else
+          {
+            $("#prev").css("opacity", 0); 
+            showPrev = false;
+          }
+        }
+
+        function getData(type) 
+        {
+            var data = {};
+            var callback;
+            if(type == "index")
+            {
+              data = { index:currentIndex };
+              callback = handler_FormTable;
+            } 
+            else
+            {
+              callback = handler_MaxCount;
+            }
+
+            $.ajax(
+            {
+              type:"GET",
+              url:"./db/locations",
+              async:false,
+              data: data,
+              datatype:"json",
+              success:function(data) {
+                //console.log("data get!");
+                callback.call({},data);
+              }
+            });
+        }
+
+        function handler_MaxCount(data){
+            MAX = data;
+            //console.log("MAX :",MAX);
+        }
+
+        function handler_FormTable(data){
+            $("table").remove();
+            $("#tableresult").append(data);
+        }
+      }); 
+  body
+    block content

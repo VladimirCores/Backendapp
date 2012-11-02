@@ -1,0 +1,29 @@
+extends layout
+
+block content
+	h1= title
+	p(id="action") Welcome to #{title}
+	form(method="post", id="form", name="form", action="./db/locations")
+			p
+				label First Name:
+				input(type="text", class="in_txt", id="name", name="name", value="")
+			p
+				label Last Name:
+				input(type="text", class="in_txt", id="lastname", name="lastname", value="")
+			p
+				label Email:
+				input(type="text", class="in_txt", id="email", name="email", value="")	
+			p
+				label City:
+				input(type="text", class="in_txt", id="city", name="city", value=user["city"])	
+			p
+				label Country:
+				input(type="text", class="in_txt", id="country", name="country", value=user.country)		
+	.button#container #{button_submit}
+	.button#container1 #{button_view}
+	#tableresult
+	a(id='next') Next
+	a(id='prev') Prev
+
+		
+		
