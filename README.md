@@ -1,9 +1,11 @@
 Backendapp
 ==========
+
+Template Project for Back-End API development using Node.js and MongoDB or Redis.<br/>
 <br/>
-Template Project for Back-End API development using Node.js and MongoDB or Redis.
 <br/>
 API				: Node.js app with MongoDB | Redis <br/>
+Node.js 		: Express (-session, -jade), MondoDB <br/>
 WebServer		: Node.js <br/>
 HTML5			: jQuery | jQueryUI | jQueryMobile <br/>
 Mobile 			: Android and iOS <br/>
