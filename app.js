@@ -31,16 +31,22 @@ var generate_mongo_url = function(obj){
   obj.hostname = (obj.hostname || 'localhost');
   obj.port = (obj.port || 27017);
   obj.db = (obj.db || 'test');
+  
+  console.log("MONGO params : hostname = " + obj.hostname);
+  console.log("MONGO params : port = " + obj.port);
+  console.log("MONGO params : db = " + obj.db);
 
   if(obj.username && obj.password){
-    return "mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db;
+    return ("mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db);
   }
   else{
-    return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
+    return process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
   }
 }
 
 var mongourl = generate_mongo_url(mongo);
+console.log("mongourl = " + mongourl);
+
 // ================================================
 // END MongoDB for use with CloudFoundry
 // ================================================
@@ -115,11 +121,15 @@ var mng             = require('mongodb'),
 
 console.log("DEFINE MONGO connection");
 var connection;
-var collection_locations;
+var locations;
 Db.connect(mongourl, function(err, conn)
 {
-  connection = conn;
-  collection_locations = connection.collection('locations');
+  if(err) console.log(err);
+  else
+  {
+    connection = conn;
+    locations = connection.collection('locations');
+  }
 });
 
 var data = {};
@@ -142,7 +152,8 @@ app.post('/db/locations', function(req, res) {
 
 app.get('/db/locations/delete', function(req, res) 
 {
-    collection_locations.drop(function(err, reply) {
+    if(locations)
+    locations.drop(function(err, reply) {
         res.writeHead(200, {
                       "Content-Type": "text/html",
                       "Access-Control-Allow-Origin":"*"
@@ -155,11 +166,10 @@ app.get('/db/locations', function(req, res)
 {
   var params = req.query;
   var startIndex = params["index"];
-  //console.log(startIndex);
-  //collection_locations.find({}).each(function(doc){}); 
+  //locations.find({}).each(function(doc){}); 
   if(startIndex != undefined)
   {
-    collection_locations.find({}, { skip:startIndex, limit:5 }, function(err, cursor) 
+    locations.find({}, { skip:startIndex, limit:5 }, function(err, cursor) 
     {
       var result = '<table width="840px"  align="center" border="1" bordercolor="#333333" cellpadding="0" cellspacing="0">'+
                       '<tr>'+
@@ -202,9 +212,7 @@ app.get('/db/locations', function(req, res)
   } 
   else
   {
-    //console.log("Look for max count");
-    collection_locations.count(function(err, count){
-        //console.log(count);
+    locations.count(function(err, count){
         res.writeHead(200, {
             "Content-Type": "text/html",
             "Access-Control-Allow-Origin":"*"
@@ -218,7 +226,6 @@ app.post('/htmls/music/set', function(req, res) {
   var data = req.body;
   data.ip = req.connection.remoteAddress;
   data.time = new Date();
-  //console.log(JSON.stringify(data));
   require('mongodb').connect(mongourl, {safe:true}, function(err, conn) {
         conn.collection('albums', function(err, coll){
             coll.insert(data, {safe:true}, function(err) {
@@ -233,8 +240,8 @@ app.post('/htmls/music/set', function(req, res) {
 });
 
 app.get('/htmls/music/get', function(req, res) {
-    require('mongodb').connect(mongourl, function(err, conn) {
-        conn.collection('albums', function(err, coll) {
+    //require('mongodb').connect(mongourl, function(err, conn) {
+        connection.collection('albums', function(err, coll) {
             coll.find(function(err, cursor) {
                 cursor.toArray(function(err, items){
                     res.set('Content-Type', 'json');
@@ -243,7 +250,7 @@ app.get('/htmls/music/get', function(req, res) {
                 });
             });
         });
-    });
+    //});
 });
 
 
